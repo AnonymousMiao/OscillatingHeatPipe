@@ -13,6 +13,7 @@ X = preprocess_data(file_path)
 # Calculate the silhouette score and inertia for different values of k
 silhouette_scores = []
 inertias = []
+
 for k in range(2, 11):
     kmeans = KMeans(n_clusters=k, random_state=0).fit(X)
     silhouette_scores.append(silhouette_score(X, kmeans.labels_))
