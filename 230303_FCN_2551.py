@@ -46,12 +46,6 @@ class MyDataset(Dataset):
     def __len__(self):
         return len(self.x)
 
-def randomize(x, y):
-    permutation = np.random.permutation(y.shape[0])
-    shuffled_x = x[permutation, :]
-    shuffled_y = y[permutation]
-    return shuffled_x, shuffled_y
-
 # Read the data from the Excel file
 data = pd.read_excel('data_combine.xlsx')
 
