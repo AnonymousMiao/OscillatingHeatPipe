@@ -8,6 +8,7 @@ from sklearn.metrics import silhouette_score
 
 from func_preprocess import preprocess_data
 
+#file path
 file_path = 'data_combine.xlsx'
 X = preprocess_data(file_path)
 
