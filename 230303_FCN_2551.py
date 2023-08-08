@@ -1,12 +1,16 @@
 import torch
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+
 from sklearn.model_selection import train_test_split
 # pip install -U scikit-learn
 from torch.utils.data import DataLoader, Dataset
-import matplotlib.pyplot as plt
-
-# Define the neural network architecture
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn.cluster import KMeans, AgglomerativeClustering
+from sklearn.mixture import GaussianMixture
+from sklearn.cluster import DBSCAN
+from func_preprocess import preprocess_data
 
 
 class Net_1(torch.nn.Module):
@@ -52,15 +56,38 @@ class MyDataset(Dataset):
 
 
 # Read the data from the Excel file
-data = pd.read_excel('data_combine.xlsx')
+data = pd.read_excel('data_clustered.xlsx')
 
-dataset_1 = data                                                       # ALL
-dataset_2 = data[(data.iloc[:, 0] >= 15) & (data.iloc[:, 0] <= 85)]    # 15-85
-dataset_3 = data[(data.iloc[:, 0] < 15) | (
-    data.iloc[:, 0] > 85)]     # 0-15 + 85-100
+# Column1	Column2	Column3	Manu    KMeans	GMM	DBSCAN	Hierarchical
 
-dataset = dataset_2.sample(frac=1).reset_index(drop=True)
-dataset_val = dataset_3.sample(frac=1).reset_index(drop=True)
+
+dataset_Manu_a = data                          # ALL
+dataset_Manu_0 = data[data.iloc[:, 3] == 0]    # 0-15
+dataset_Manu_1 = data[data.iloc[:, 3] == 1]    # 15-85
+dataset_Manu_2 = data[data.iloc[:, 3] == 2]    # 85-100
+dataset_Manu_02 = data[(data.iloc[:, 3] == 0) | (
+    data.iloc[:, 3] == 2)]     # 0-15 & 85-100
+
+dataset_Kmeans_a = data
+dataset_Kmeans_0 = data[data.iloc[:, 4] == 0]
+dataset_Kmeans_1 = data[data.iloc[:, 4] == 1]
+dataset_Kmeans_2 = data[data.iloc[:, 4] == 2]
+dataset_Kmeans_02 = data[(data.iloc[:, 4] == 0) | (data.iloc[:, 4] == 2)]
+
+dataset_GMM_a = data
+dataset_GMM_0 = data[data.iloc[:, 5] == 0]
+dataset_GMM_1 = data[data.iloc[:, 5] == 1]
+dataset_GMM_2 = data[data.iloc[:, 5] == 2]
+dataset_GMM_02 = data[(data.iloc[:, 5] == 0) | (data.iloc[:, 5] == 2)]
+
+dataset_Hier_a = data
+dataset_Hier_0 = data[data.iloc[:, 7] == 0]
+dataset_Hier_1 = data[data.iloc[:, 7] == 1]
+dataset_Hier_2 = data[data.iloc[:, 7] == 2]
+dataset_Hier_02 = data[(data.iloc[:, 7] == 0) | (data.iloc[:, 7] == 2)]
+
+dataset = dataset_Hier_a.sample(frac=1).reset_index(drop=True)
+dataset_val = dataset_Hier_a.sample(frac=1).reset_index(drop=True)
 
 # we can get absolutely error 0.30 error relative 11.0% with dataset_1
 # we can get absolutely error 0.06 error relative 10.5% with dataset_2
@@ -73,7 +100,7 @@ y = dataset.iloc[:, 2]   # Output variable
 
 # Split the data into training and validation sets
 
-val_size = 11
+val_size = 6
 train_size = len(dataset)-val_size
 train_x, val_x, train_y, val_y = train_test_split(
     dataset.iloc[:, :2], dataset.iloc[:, 2], test_size=val_size)
@@ -129,7 +156,7 @@ for epoch in range(1000):
 
         val_loss_history.append(val_loss.item())
 
-    epochs_perPlot = 200
+    epochs_perPlot = 1000
     if epoch % epochs_perPlot == (epochs_perPlot-1):
         # Update the plot with the latest loss values
         ax.clear()
@@ -141,7 +168,7 @@ for epoch in range(1000):
         ax.legend()
         plt.draw()
 
-    epochs_perPrint = 20
+    epochs_perPrint = 1000
     if epoch % epochs_perPrint == (epochs_perPrint-1):
         print(
             f"Epoch {epoch+1}, Train Loss: {loss.item():.4f}, Val Loss: {val_loss.item():.4f}")
@@ -154,8 +181,8 @@ with torch.no_grad():
     error_2 = torch.abs((output.squeeze() - torch.tensor(y.values, dtype=torch.float32)
                          )/torch.tensor(y.values, dtype=torch.float32)).mean()
 
-    print(f'Relative Error 1: {error_1:.2%}')
-    print(f'Relative Error 2: {error_2:.2%}')
+print(f'Relative Error 1: {error_1:.2%}', f'Relative Error 2: {error_2:.2%}')
+
 
 plt.show()
 plt.ioff()

@@ -78,12 +78,6 @@ X_df['GMM'] = n_gmm_labels
 X_df['DBSCAN'] = dbscan_labels
 X_df['Hierarchical'] = n_hierarchical_labels
 
-
-# Save X_df to an Excel file
-output_file_path = 'output_data.xlsx'
-# Save X_df to the Excel file without including the index
-X_df.to_excel(output_file_path, index=False)
-
 # Plot the data points with colors corresponding to their assigned labels
 fig = plt.figure(figsize=(12, 12))
 
@@ -104,3 +98,9 @@ ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=hierarchical_labels)
 ax.set_title('Hierarchical clustering')
 
 plt.show()
+
+
+# Save X_df to an Excel file
+output_file_path = 'output_data.xlsx'
+# Save X_df to the Excel file without including the index
+X_df.to_excel(output_file_path, index=False)
