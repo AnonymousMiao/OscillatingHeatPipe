@@ -86,8 +86,8 @@ dataset_Hier_1 = data[data.iloc[:, 7] == 1]
 dataset_Hier_2 = data[data.iloc[:, 7] == 2]
 dataset_Hier_02 = data[(data.iloc[:, 7] == 0) | (data.iloc[:, 7] == 2)]
 
-dataset = dataset_Hier_a.sample(frac=1).reset_index(drop=True)
-dataset_val = dataset_Hier_a.sample(frac=1).reset_index(drop=True)
+dataset = dataset_Manu_a.sample(frac=1).reset_index(drop=True)
+dataset_val = dataset_Manu_a.sample(frac=1).reset_index(drop=True)
 
 # we can get absolutely error 0.30 error relative 11.0% with dataset_1
 # we can get absolutely error 0.06 error relative 10.5% with dataset_2
@@ -114,7 +114,7 @@ val_dataset = MyDataset(val_x, val_y)
 val_loader = DataLoader(val_dataset, batch_size=4, shuffle=False)
 
 # Create the neural network and the optimizer
-net = Net_1()
+net = Net_2()
 optimizer = torch.optim.Adam(net.parameters(), lr=0.001, weight_decay=0.001)
 
 # Initialize the plot
