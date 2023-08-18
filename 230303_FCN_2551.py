@@ -28,6 +28,20 @@ class Net_1(torch.nn.Module):
 class Net_2(torch.nn.Module):
     def __init__(self):
         super(Net_2, self).__init__()
+        self.fc1 = torch.nn.Linear(2, 5)
+        self.fc2 = torch.nn.Linear(5, 5)
+        self.fc3 = torch.nn.Linear(5, 1)
+
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        x = torch.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+
+
+class Net_3(torch.nn.Module):
+    def __init__(self):
+        super(Net_3, self).__init__()
         self.fc1 = torch.nn.Linear(2, 10)
         self.fc2 = torch.nn.Linear(10, 20)
         self.fc3 = torch.nn.Linear(20, 10)
@@ -114,7 +128,7 @@ val_dataset = MyDataset(val_x, val_y)
 val_loader = DataLoader(val_dataset, batch_size=4, shuffle=False)
 
 # Create the neural network and the optimizer
-net = Net_2()
+net = Net_3()
 optimizer = torch.optim.Adam(net.parameters(), lr=0.001, weight_decay=0.001)
 
 # Initialize the plot
